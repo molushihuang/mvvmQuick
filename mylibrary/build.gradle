@@ -50,7 +50,7 @@ publish {
     userOrg = 'organization1' //bintray账户下某个组织id
     groupId = 'com.xqd.mylibrary' //maven仓库下库的包名，一般为模块包名
     artifactId = 'mvvmquick' //项目名称
-    publishVersion = '1.0.1' //版本号
+    publishVersion = '1.0.2' //版本号
     desc = 'custom chart for android' //项目介绍，可以不写
     website = '' //项目主页，可以不写
 }
@@ -59,21 +59,7 @@ task javadoc(type: Javadoc) {
     options.encoding = "utf-8"
 }
 
-//checkstyle {
-//    toolVersion = '7.6.1'
-//}
-
 tasks.withType(Javadoc) {
     options.addStringOption('Xdoclint:none', '-quiet')
     options.addStringOption('encoding', 'UTF-8')
 }
-
-//task checkstyle(type:Checkstyle) {
-//    description 'Runs Checkstyle inspection against matisse sourcesets.'
-//    group = 'Code Quality'
-//    configFile rootProject.file('checkstyle.xml')
-//    ignoreFailures = false
-//    showViolations true
-//    classpath = files()
-//    source 'src/main/java'
-//}
