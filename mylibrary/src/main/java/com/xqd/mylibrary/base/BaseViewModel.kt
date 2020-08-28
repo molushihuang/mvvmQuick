@@ -19,7 +19,6 @@ open class BaseViewModel : ViewModel() {
      */
     private var compositeDisposable: CompositeDisposable? = null
 
-
     var error = MutableLiveData<Any>()
     var errorCode = MutableLiveData<Int>()
     var showDialog = DialogLiveData<DialogBean>()

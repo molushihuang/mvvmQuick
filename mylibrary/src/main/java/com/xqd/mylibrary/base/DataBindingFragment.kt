@@ -51,19 +51,17 @@ import androidx.fragment.app.Fragment
 
     protected abstract fun setContentView(): Int
 
-    open fun getViewModel() {
-
-    }
+    open fun getViewModel() {}
 
     /**
      * 初始化视图
      */
-    protected abstract fun initView()
+    open fun initView(){}
 
     /**
      * 初始化数据
      */
-    protected abstract fun initData()
+    open fun initData(){}
 
     fun shortToast(content: String?) {
         try {
