@@ -5,9 +5,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
 
-    <style name="AppTheme.NoActionBar">
+        <!--   必须有下面这两句才能在activity里面设置toolbar代替actionbar     -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
