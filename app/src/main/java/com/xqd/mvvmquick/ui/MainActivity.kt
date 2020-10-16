@@ -1,11 +1,13 @@
 package com.xqd.mvvmquick.ui
 
 import android.app.TimePickerDialog
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
 import com.xqd.mvvmquick.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         numberPicker.minValue = 1
 
         button.setOnClickListener { getTime() }
-
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
