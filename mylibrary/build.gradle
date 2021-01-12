@@ -54,6 +54,7 @@ dependencies {
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -66,7 +67,7 @@ publish {
     userOrg = 'organization1' //bintray账户下某个组织id
     groupId = 'com.xqd.mylibrary' //maven仓库下库的包名，一般为模块包名
     artifactId = 'mvvmquick' //项目名称
-    publishVersion = '1.0.6' //版本号
+    publishVersion = '1.0.9' //版本号
     desc = 'custom chart for android' //项目介绍，可以不写
     website = '' //项目主页，可以不写
 }

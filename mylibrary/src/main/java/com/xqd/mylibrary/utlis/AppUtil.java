@@ -37,10 +37,13 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.xqd.mylibrary.R;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -960,5 +963,29 @@ public final class AppUtil {
         }
     }
 
+    public static String readTextFromAsset(String assetName, Context context) {
+        try {
+            InputStream is = context.getAssets().open(assetName);  //获得AssetManger 对象, 调用其open 方法取得  对应的inputStream对象
+            int size = is.available();//取得数据流的数据大小
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            return new String(buffer);
+        } catch (Exception e) {
+        }
+        return null;
+    }
 
+    public static String readTextFromRaw(int rawId, Context context) {
+        try {
+            InputStream is = context.getResources().openRawResource(rawId);
+            int size = is.available();//取得数据流的数据大小
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            return new String(buffer);
+        } catch (Exception e) {
+        }
+        return null;
+    }
 }
