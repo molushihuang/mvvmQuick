@@ -51,10 +51,19 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
     implementation 'androidx.annotation:annotation:1.1.0'
+    implementation('androidx.datastore:datastore-preferences:1.0.0-alpha05') {
+        exclude group: 'org.jetbrains.kotlinx', module: 'kotlinx-coroutines-core'
+        exclude group: 'org.jetbrains.kotlinx', module: 'kotlinx-coroutines-core-jvm'
+    }
+    implementation('androidx.datastore:datastore-preferences-core:1.0.0-alpha05') {
+        exclude group: 'org.jetbrains.kotlinx', module: 'kotlinx-coroutines-core'
+        exclude group: 'org.jetbrains.kotlinx', module: 'kotlinx-coroutines-core-jvm'
+    }
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
     implementation 'com.google.code.gson:gson:2.8.6'
+
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

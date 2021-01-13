@@ -963,6 +963,12 @@ public final class AppUtil {
         }
     }
 
+    /**
+     * 读取getAssets文件资源
+     * @param assetName
+     * @param context
+     * @return
+     */
     public static String readTextFromAsset(String assetName, Context context) {
         try {
             InputStream is = context.getAssets().open(assetName);  //获得AssetManger 对象, 调用其open 方法取得  对应的inputStream对象
@@ -976,6 +982,12 @@ public final class AppUtil {
         return null;
     }
 
+    /**
+     * 读书Raw文件资源
+     * @param rawId
+     * @param context
+     * @return
+     */
     public static String readTextFromRaw(int rawId, Context context) {
         try {
             InputStream is = context.getResources().openRawResource(rawId);

@@ -1,18 +1,19 @@
 package com.xqd.mvvmquick.ui
 
 import android.app.TimePickerDialog
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
 import com.xqd.mvvmquick.R
+import com.xqd.mylibrary.utlis.DataStoreUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -42,6 +43,15 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+        }
+
+        DataStoreUtil.init(this)
+//        GlobalScope.launch {
+//            DataStoreUtil.saveLong("type", 1589)
+//        }
+
+        GlobalScope.launch {
+            Log.e("DataStore",DataStoreUtil.getLong("type").toString())
         }
 
     }
