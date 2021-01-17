@@ -5,5 +5,5 @@ package com.xqd.mylibrary.inyterface
  * NO bug
  */
 interface IOnItemClick<T> {
-    fun onItemClick(position: Int, type: Int, t: T)
+    fun onItemClick(position: Int, type: Int, t: T?)
 }

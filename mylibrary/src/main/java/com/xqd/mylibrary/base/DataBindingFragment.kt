@@ -76,16 +76,7 @@ import androidx.fragment.app.Fragment
     }
 
     protected open fun showLoad(string: String?) {
-        if (mActivity.isDestroyed || mActivity.isFinishing) {
-            return
-        }
-        if (progressDialog != null && progressDialog!!.isShowing) {
-            progressDialog!!.dismiss()
-        }
-        progressDialog = ProgressDialog(mActivity)
-        progressDialog!!.setMessage(string)
-        progressDialog!!.setCancelable(false)
-        progressDialog!!.show()
+        showLoad(string, false)
     }
 
     protected open fun showLoad(string: String?, cancelable: Boolean) {
@@ -99,6 +90,20 @@ import androidx.fragment.app.Fragment
         progressDialog!!.setMessage(string)
         progressDialog!!.setCancelable(cancelable)
         progressDialog!!.show()
+    }
+
+    protected open fun changeLoad(string: String?) {
+        if (mActivity == null || mActivity.isDestroyed || mActivity.isFinishing) {
+            return
+        }
+        if (progressDialog != null && progressDialog!!.isShowing) {
+            progressDialog!!.setMessage(string)
+        } else {
+            progressDialog = ProgressDialog(mActivity)
+            progressDialog!!.setMessage(string)
+            progressDialog!!.setCancelable(false)
+            progressDialog!!.show()
+        }
     }
 
     protected open fun showLoadHorizontal() {

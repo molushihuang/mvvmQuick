@@ -32,6 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected LinearLayout llTitle;
     private ProgressDialog progressDialog;
     private InputMethodManager imm;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -87,16 +88,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void showLoad(String string) {
-        if (mActivity == null || mActivity.isDestroyed() || mActivity.isFinishing()) {
-            return;
-        }
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        progressDialog = new ProgressDialog(mActivity);
-        progressDialog.setMessage(string);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        showLoad(string, false);
     }
 
     protected void showLoad(String string, boolean cancelable) {
@@ -110,6 +102,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         progressDialog.setMessage(string);
         progressDialog.setCancelable(cancelable);
         progressDialog.show();
+    }
+
+    protected void changeLoad(String string) {
+        if (mActivity == null || mActivity.isDestroyed() || mActivity.isFinishing()) {
+            return;
+        }
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.setMessage(string);
+        } else {
+            progressDialog = new ProgressDialog(mActivity);
+            progressDialog.setMessage(string);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
     }
 
     protected void showLoadHorizontal() {

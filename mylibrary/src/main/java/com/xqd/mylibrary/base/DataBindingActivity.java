@@ -90,16 +90,7 @@ public abstract class DataBindingActivity<DB extends ViewDataBinding> extends Ap
     }
 
     protected void showLoad(String string) {
-        if (mActivity == null || mActivity.isDestroyed() || mActivity.isFinishing()) {
-            return;
-        }
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        progressDialog = new ProgressDialog(mActivity);
-        progressDialog.setMessage(string);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        showLoad(string, false);
     }
 
     protected void showLoad(String string, boolean cancelable) {
@@ -113,6 +104,20 @@ public abstract class DataBindingActivity<DB extends ViewDataBinding> extends Ap
         progressDialog.setMessage(string);
         progressDialog.setCancelable(cancelable);
         progressDialog.show();
+    }
+
+    protected void changeLoad(String string) {
+        if (mActivity == null || mActivity.isDestroyed() || mActivity.isFinishing()) {
+            return;
+        }
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.setMessage(string);
+        } else {
+            progressDialog = new ProgressDialog(mActivity);
+            progressDialog.setMessage(string);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
     }
 
     protected void showLoadHorizontal() {
