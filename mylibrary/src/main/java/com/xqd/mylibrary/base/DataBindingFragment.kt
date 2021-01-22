@@ -65,7 +65,9 @@ import androidx.fragment.app.Fragment
 
     fun shortToast(content: String?) {
         try {
-            Toast.makeText(mActivity, content, Toast.LENGTH_SHORT).show()
+            if(content.isNullOrEmpty()){
+                Toast.makeText(mActivity, content, Toast.LENGTH_SHORT).show()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

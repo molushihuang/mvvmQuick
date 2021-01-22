@@ -39,7 +39,9 @@ public abstract class ModelBindingActivity<VM extends BaseViewModel, DB extends 
             viewModel.getError(this, new Observer<Object>() {
                 @Override
                 public void onChanged(Object o) {
-                    shortToast(o.toString());
+                    if(o!=null){
+                        shortToast(o.toString());
+                    }
                 }
             });
         }

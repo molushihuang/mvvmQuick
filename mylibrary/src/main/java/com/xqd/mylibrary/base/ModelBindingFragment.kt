@@ -17,7 +17,7 @@ abstract class ModelBindingFragment<VM : BaseViewModel, DB : ViewDataBinding> : 
         viewModel.getShowDialog(this,
             Observer { dialogBean -> showLoad(dialogBean) })
         viewModel.getError(this,
-            Observer { o -> shortToast(o.toString()) })
+            Observer { o -> shortToast(o?.toString()) })
     }
 
     protected abstract fun initViewModel(): VM
