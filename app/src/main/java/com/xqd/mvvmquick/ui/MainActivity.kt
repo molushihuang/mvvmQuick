@@ -9,7 +9,9 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.xqd.mvvmquick.R
+import com.xqd.mylibrary.utlis.AppUtil
 import com.xqd.mylibrary.utlis.DataStoreUtil
+import com.xqd.mylibrary.utlis.DateUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.GlobalScope
@@ -39,11 +41,17 @@ class MainActivity : AppCompatActivity() {
         numberPicker.maxValue = 100
         numberPicker.minValue = 1
 
+        AppUtil.networkCheck(this)
+        AppUtil.isDeviceInVPN()
+
         button.setOnClickListener { getTime() }
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+
+        Log.d("DateUtils", DateUtils.getTimeForSS(61 * 1000, "HH:mm:ss"))
+        Log.d("DateUtils", DateUtils.getTimeForSS2(61))
 
         DataStoreUtil.init(this)
 //        GlobalScope.launch {
@@ -51,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         GlobalScope.launch {
-            Log.e("DataStore",DataStoreUtil.getLong("type").toString())
+            Log.e("DataStore", DataStoreUtil.getLong("type").toString())
         }
 
     }
@@ -77,19 +85,6 @@ class MainActivity : AppCompatActivity() {
         )
         timePickerDialog.show()
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

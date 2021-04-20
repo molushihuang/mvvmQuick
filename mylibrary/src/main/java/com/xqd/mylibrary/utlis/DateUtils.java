@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by Administrator on 2017/8/11.
@@ -300,7 +301,7 @@ public class DateUtils {
         // 获取指定日期转换成星期几
         if (mydate == 7) {
             week = "日";
-        } else if (mydate ==1) {
+        } else if (mydate == 1) {
             week = "一";
         } else if (mydate == 2) {
             week = "二";
@@ -537,12 +538,38 @@ public class DateUtils {
         cale = Calendar.getInstance();
         cale.add(Calendar.MONTH, 1);
         cale.set(Calendar.DAY_OF_MONTH, 0);
-        return  DATE_FORMAT_DATE.format(cale.getTime());
+        return DATE_FORMAT_DATE.format(cale.getTime());
     }
 
     public static String formatDateStr(String time, String format1, String format2) {
-        Date date = new Date(getTimeStamp(time,format1));
+        Date date = new Date(getTimeStamp(time, format1));
         return new SimpleDateFormat(format2).format(date);
+    }
+
+    public static String getTimeForSS(long ss, String format) {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
+        String hms = formatter.format(ss);
+
+        return hms;
+    }
+
+    public static String getTimeForSS2(long ss) {
+
+        long secondStr = ss % 60;
+        long minute = (ss - secondStr) / 60;
+        long minuteStr = minute % 60;
+        long hour = (minute - minuteStr) / 60;
+
+        return formatTime(hour) + ":" + formatTime(minuteStr) + ":" + formatTime(secondStr);
+    }
+
+    public static String formatTime(long time) {
+        if (time < 10) {
+            return "0" + time;
+        } else {
+            return time + "";
+        }
     }
 
 }

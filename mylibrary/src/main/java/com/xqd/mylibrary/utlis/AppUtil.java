@@ -17,6 +17,8 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -37,8 +39,6 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
-import com.xqd.mylibrary.R;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -47,7 +47,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.NetworkInterface;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -965,6 +967,7 @@ public final class AppUtil {
 
     /**
      * 读取getAssets文件资源
+     *
      * @param assetName
      * @param context
      * @return
@@ -984,6 +987,7 @@ public final class AppUtil {
 
     /**
      * 读书Raw文件资源
+     *
      * @param rawId
      * @param context
      * @return
@@ -999,5 +1003,40 @@ public final class AppUtil {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    public static boolean isDeviceInVPN() {
+        boolean isVPN = false;
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                Log.i("TAG", "nif.getName()" + nif.getName());
+                if (nif.getName().equals("tun0") || nif.getName().equals("ppp0")) {
+                    isVPN = true;
+                    Log.i("TAG", "isDeviceInVPN  current device is in VPN.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isVPN;
+    }
+
+    public static boolean networkCheck(Context mContext) {
+        boolean isVPN = false;
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            Network network = connectivityManager.getActiveNetwork();
+
+            NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(network);
+            if (networkCapabilities.toString().contains("VPN Capabilities")) {
+                isVPN = true;
+            }
+            Log.d("TAG", "networkCapabilities -> " + networkCapabilities.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("TAG", "networkCapabilities -> " + e.toString());
+        }
+        return isVPN;
     }
 }
