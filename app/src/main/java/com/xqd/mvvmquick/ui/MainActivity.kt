@@ -7,6 +7,12 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import coil.Coil
+import coil.imageLoader
+import coil.load
+import coil.transform.BlurTransformation
+import coil.transform.CircleCropTransformation
+import coil.transform.RoundedCornersTransformation
 import com.google.android.material.snackbar.Snackbar
 import com.xqd.mvvmquick.R
 import com.xqd.mylibrary.utlis.AppUtil
@@ -41,17 +47,11 @@ class MainActivity : AppCompatActivity() {
         numberPicker.maxValue = 100
         numberPicker.minValue = 1
 
-        AppUtil.networkCheck(this)
-        AppUtil.isDeviceInVPN()
-
         button.setOnClickListener { getTime() }
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
-
-        Log.d("DateUtils", DateUtils.getTimeForSS(61 * 1000, "HH:mm:ss"))
-        Log.d("DateUtils", DateUtils.getTimeForSS2(61))
 
         DataStoreUtil.init(this)
 //        GlobalScope.launch {
@@ -61,6 +61,16 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch {
             Log.e("DataStore", DataStoreUtil.getLong("type").toString())
         }
+
+//        imageView.load("https://photo.328ym.com/01ae73af6cd24356ab168b56ad268a0d")
+        imageView.load("https://phototest.328ym.com/366a5a720f95474183654046bff77ea1") {
+            crossfade(true)
+            placeholder(R.mipmap.ic_launcher)
+            transformations(CircleCropTransformation())
+//            transformations(BlurTransformation(this@MainActivity,15f),RoundedCornersTransformation(10f,10f,10f,10f))
+//            transformations(RoundedCornersTransformation(10f,10f,10f,10f))
+        }
+
 
     }
 
