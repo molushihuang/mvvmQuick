@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import coil.Coil
 import coil.imageLoader
 import coil.load
+import coil.request.ImageRequest
 import coil.transform.BlurTransformation
 import coil.transform.CircleCropTransformation
+import coil.transform.GrayscaleTransformation
 import coil.transform.RoundedCornersTransformation
 import com.google.android.material.snackbar.Snackbar
 import com.xqd.mvvmquick.R
@@ -70,6 +72,15 @@ class MainActivity : AppCompatActivity() {
 //            transformations(BlurTransformation(this@MainActivity,15f),RoundedCornersTransformation(10f,10f,10f,10f))
 //            transformations(RoundedCornersTransformation(10f,10f,10f,10f))
         }
+
+//        val request = ImageRequest.Builder(this)
+//            .data("https://phototest.328ym.com/366a5a720f95474183654046bff77ea1")
+//            .transformations(CircleCropTransformation(),GrayscaleTransformation())
+//            .target { drawable ->
+//                imageView.setImageDrawable(drawable)
+//            }
+//            .build()
+//        this.imageLoader.enqueue(request)
 
 
     }
