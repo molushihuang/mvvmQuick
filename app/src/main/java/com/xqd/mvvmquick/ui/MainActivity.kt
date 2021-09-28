@@ -1,30 +1,26 @@
 package com.xqd.mvvmquick.ui
 
 import android.app.TimePickerDialog
+import android.content.ComponentName
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import coil.Coil
-import coil.imageLoader
 import coil.load
-import coil.request.ImageRequest
-import coil.transform.BlurTransformation
 import coil.transform.CircleCropTransformation
-import coil.transform.GrayscaleTransformation
-import coil.transform.RoundedCornersTransformation
 import com.google.android.material.snackbar.Snackbar
 import com.xqd.mvvmquick.R
-import com.xqd.mylibrary.utlis.AppUtil
 import com.xqd.mylibrary.utlis.DataStoreUtil
-import com.xqd.mylibrary.utlis.DateUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,7 +45,9 @@ class MainActivity : AppCompatActivity() {
         numberPicker.maxValue = 100
         numberPicker.minValue = 1
 
-        button.setOnClickListener { getTime() }
+        button.setOnClickListener {
+            jump()
+        }
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -107,6 +105,32 @@ class MainActivity : AppCompatActivity() {
         timePickerDialog.show()
     }
 
+    private fun jump(){
+
+        // 通过包名获取要跳转的app，创建intent对象
+//        val intent = packageManager.getLaunchIntentForPackage("android.youma.com")
+//        // 这里如果intent为空，就说名没有安装要跳转的应用嘛
+//        if (intent != null) {
+//            // 这里跟Activity传递参数一样的嘛，不要担心怎么传递参数，还有接收参数也是跟Activity和Activity传参数一样
+//            intent.putExtra("name", "Liu xiang")
+//            intent.putExtra("birthday", "1983-7-13")
+//            startActivity(intent)
+//
+//        } else {
+//            // 没有安装要跳转的app应用，提醒一下
+//            Toast.makeText(applicationContext, "哟，赶紧下载安装这个APP吧", Toast.LENGTH_LONG).show()
+//        }
+
+        val intent = Intent()
+        val bundle = Bundle()
+        bundle.putString("FIRST_APP_KEY", "你好 ，MainActivity")
+        intent.putExtras(bundle)
+        intent.component = ComponentName(
+            "android.youma.com",
+            "android.youma.com.ui.activity.WelcomeActivity"
+        )
+        startActivity(intent)
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.add("1")

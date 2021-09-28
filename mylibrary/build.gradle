@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 29
@@ -65,27 +64,23 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
 
 
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-}
-
-publish {
-    repoName = 'mvvmquick'//仓库名
-    userOrg = 'organization1' //bintray账户下某个组织id
-    groupId = 'com.xqd.mylibrary' //maven仓库下库的包名，一般为模块包名
-    artifactId = 'mvvmquick' //项目名称
-    publishVersion = '1.1.4' //版本号
-    desc = 'custom chart for android' //项目介绍，可以不写
-    website = '' //项目主页，可以不写
-}
-
-task javadoc(type: Javadoc) {
-    options.encoding = "utf-8"
 }
 
 tasks.withType(Javadoc) {
     options.addStringOption('Xdoclint:none', '-quiet')
     options.addStringOption('encoding', 'UTF-8')
 }
+
+ext {
+    bintrayName = 'mvvmquick'
+    artifact = bintrayName
+    libraryName = 'mvvmquick'
+    libraryDescription = '快速开发框架'
+    libraryVersion = litearouter_main_version
+}
+
+apply from: '../maven-publish.gradle'

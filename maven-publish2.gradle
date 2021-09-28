@@ -1,0 +1,93 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.source
+}
+
+ext["signing.keyId"] = '3D1734BD'
+ext["signing.password"] = '200822xx'
+ext["signing.secretKeyRingFile"] = 'C:\\Users\\Administrator\\Administrator_0x3D1734BD_SECRET.gpg'
+ext["ossrhUsername"] = 'xqd'
+ext["ossrhPassword"] = '200822XXccvv@'
+
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            // The coordinates of the library, being set from variables that
+            // we'll set up in a moment
+            groupId publishedGroupId
+            artifactId artifact
+            version libraryVersion
+
+            // Two artifacts, the `aar` and the sources
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            artifact androidSourcesJar
+
+            // Self-explanatory metadata for the most part
+            pom {
+                name = libraryName
+                description = libraryDescription
+                // If your project has a dedicated site, use its URL here
+                url = siteUrl
+                licenses {
+                    license {
+                        //协议类型，一般默认Apache License2.0的话不用改：
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId // '这里填写申请账号时候的全名就可以'
+                        name developerName // '这里随意填写就可以'
+                        email developerEmail// '最好是申请账号时用的邮箱'
+                    }
+                }
+                // Version control info, if you're using GitHub, follow the format as seen here
+                scm {
+                    connection gitUrl // 'scm:替换成项目git地址'
+                    developerConnection gitUrl // 'scm:替换为git开头的项目地址'
+                    url siteUrl // '项目首页，可以是github项目的主页'
+                }
+                // A slightly hacky fix so that your POM will include any transitive dependencies
+                // that your library builds upon
+                withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+
+                    project.configurations.implementation.allDependencies.each {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        // The repository to publish to, Sonatype/MavenCentral
+        maven {
+            // This is an arbitrary name, you may also use "mavencentral" or
+            // any other name that's descriptive for you
+            name = libraryName
+
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            // You only need this if you want to publish snapshots, otherwise just set the URL
+            // to the release repo directly
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            // The username and password we've fetched earlier
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
+    }
+}
+signing {
+    sign publishing.publications
+}
