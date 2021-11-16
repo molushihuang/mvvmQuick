@@ -83,4 +83,4 @@ ext {
     libraryVersion = litearouter_main_version
 }
 
-apply from: '../maven-publish.gradle'
+//apply from: '../maven-publish.gradle'

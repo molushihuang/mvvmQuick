@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.math.abs
 
 
 class MainActivity : AppCompatActivity() {
@@ -80,7 +82,10 @@ class MainActivity : AppCompatActivity() {
 //            .build()
 //        this.imageLoader.enqueue(request)
 
+        addViews()
 
+        var oneToTen = Array(10, { i -> i + 1 })
+        oneToTen.count()
     }
 
     private fun getTime() {
@@ -105,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         timePickerDialog.show()
     }
 
-    private fun jump(){
+    private fun jump() {
 
         // 通过包名获取要跳转的app，创建intent对象
 //        val intent = packageManager.getLaunchIntentForPackage("android.youma.com")
@@ -130,6 +135,20 @@ class MainActivity : AppCompatActivity() {
             "android.youma.com.ui.activity.WelcomeActivity"
         )
         startActivity(intent)
+    }
+
+    private fun addViews() {
+        val view1 = layoutInflater.inflate(R.layout.item_view, null, false)
+        flContain.addView(view1)
+        val params = view1.layoutParams as FrameLayout.LayoutParams
+        val random= Random()
+        val left= abs(random.nextInt()%800)
+        val top= abs(random.nextInt()%800)
+        val right= abs(random.nextInt()%800)
+        val bottom= abs(random.nextInt()%800)
+        Log.e("margins","left"+left+"top"+top+"right"+right+"bottom"+bottom)
+        params.setMargins(left, top, right, bottom)
+        view1.layoutParams = params
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
