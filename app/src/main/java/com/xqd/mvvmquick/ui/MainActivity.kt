@@ -1,8 +1,14 @@
 package com.xqd.mvvmquick.ui
 
+import android.Manifest
 import android.app.TimePickerDialog
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -21,11 +27,25 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
+import android.hardware.SensorManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import kotlin.collections.ArrayList
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var actionBar: ActionBar
+    private lateinit var mSensorManager: SensorManager
+    private var gravity: FloatArray? = null
+    private var geomagnetic: FloatArray? = null
+    private var orentation: FloatArray? = null
+    private var degrees: ArrayList<Double> = ArrayList()
+    private var yAngleDegreesOld: ArrayList<Double> = ArrayList()
+    private var yAngleDegrees: ArrayList<Double> = ArrayList()
+    private var yAngleDegreesFirst: ArrayList<Double> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,8 +70,7 @@ class MainActivity : AppCompatActivity() {
             jump()
         }
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
         }
 
         DataStoreUtil.init(this)
@@ -85,6 +104,10 @@ class MainActivity : AppCompatActivity() {
 
         var oneToTen = Array(10, { i -> i + 1 })
         oneToTen.count()
+
+        //获取传感器服务
+        mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        registerSensor()
     }
 
     private fun getTime() {
@@ -101,10 +124,7 @@ class MainActivity : AppCompatActivity() {
 
         //时间选择器
         var timePickerDialog = TimePickerDialog(
-            this, { view, hourOfDay, minute -> },
-            calendar.get(Calendar.HOUR_OF_DAY),
-            calendar.get(Calendar.MINUTE),
-            true
+            this, { view, hourOfDay, minute -> }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
         )
         timePickerDialog.show()
     }
@@ -130,8 +150,7 @@ class MainActivity : AppCompatActivity() {
         bundle.putString("FIRST_APP_KEY", "你好 ，MainActivity")
         intent.putExtras(bundle)
         intent.component = ComponentName(
-            "android.youma.com",
-            "android.youma.com.ui.activity.WelcomeActivity"
+            "android.youma.com", "android.youma.com.ui.activity.WelcomeActivity"
         )
         startActivity(intent)
     }
@@ -140,15 +159,76 @@ class MainActivity : AppCompatActivity() {
         val view1 = layoutInflater.inflate(R.layout.item_view, null, false)
         flContain.addView(view1)
         val params = view1.layoutParams as FrameLayout.LayoutParams
-        val random= Random()
-        val left= abs(random.nextInt()%800)
-        val top= abs(random.nextInt()%800)
-        val right= abs(random.nextInt()%800)
-        val bottom= abs(random.nextInt()%800)
-        Log.e("margins","left"+left+"top"+top+"right"+right+"bottom"+bottom)
+        val random = Random()
+        val left = abs(random.nextInt() % 800)
+        val top = abs(random.nextInt() % 800)
+        val right = abs(random.nextInt() % 800)
+        val bottom = abs(random.nextInt() % 800)
+        Log.e("margins", "left" + left + "top" + top + "right" + right + "bottom" + bottom)
         params.setMargins(left, top, right, bottom)
         view1.layoutParams = params
     }
+
+
+    private fun registerSensor() {
+        /** 方向传感器需要使用加速度传感器和磁场传感器（这个可以不需要），不然的话获取y、z的数据不能变化，这里必须注册以下传感器
+         * android 4.0系统摩托罗拉 defy 测试至少需要加速度传感器才可以正常获取y、z的数据
+         * */
+//        mSensorManager.registerListener(
+//            this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME
+//        )
+        mSensorManager.registerListener(
+            this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME
+        )
+//        mSensorManager.registerListener(
+//            this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME
+//        )
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+//        Log.e("方向传感器》", "event.sensor.getType():" + event.sensor.getType())
+        when (event.sensor.getType()) {
+            Sensor.TYPE_ACCELEROMETER -> gravity = event.values
+            Sensor.TYPE_MAGNETIC_FIELD -> geomagnetic = event.values
+            Sensor.TYPE_ORIENTATION -> orentation = event.values
+        }
+//        if(orentation!=null){
+//            Log.e("方向传感器》", " xAngle:" + orentation!![0])
+//            Log.e("方向传感器》", "yAngle:" + orentation!![1])
+//            Log.e("方向传感器》", " zAngle:" + orentation!![2])
+//        }
+
+        //记录rotationMatrix矩阵值
+        val r = FloatArray(9)
+        //记录通过getOrientation()计算出来的方位横滚俯仰值
+        val values = FloatArray(3)
+
+        if (gravity != null) {
+            if (Utils.getRotationMatrix(r, gravity)) {
+                SensorManager.getOrientation(r, values)
+                var yAngle = Math.toDegrees(values[1].toDouble())
+                var zAngle = Math.toDegrees(values[2].toDouble())
+                Log.e("方向传感器》", "yAngle:" + yAngle)
+                Log.e("方向传感器》", "zAngle:" + zAngle)
+
+                degrees.add(yAngle)
+                yAngleDegreesOld.add(yAngle)
+                if (degrees.size >= 5) {
+                    degrees = Utils.optimizePointsThree(degrees, degrees.size)
+                    yAngle = degrees[degrees.size - 1]
+                    yAngleDegreesFirst.add(degrees[0])
+                    degrees.removeAt(0)
+                }
+                yAngleDegrees.add(yAngle)
+            }
+        }
+
+
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.add("1")
@@ -166,6 +246,14 @@ class MainActivity : AppCompatActivity() {
         finish()
         return super.onSupportNavigateUp()
     }
+    //    @Override
+    //    public void onWindowFocusChanged(boolean hasFocus) {
+    //        super.onWindowFocusChanged(hasFocus);
+    //        if(hasFocus){
+    //            mFragments[index].setImeerStatusBar();
+    //        }
+    //    }
+
 
 
 }
