@@ -40,8 +40,8 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
         setContentView(R.layout.activity_degree)
 
         btSave.setOnClickListener {
-            var filePathy = Utils.EXTERNAL_STORAGE + "/Download/" + "角度数据yAngleDegreesOld.txt"
-            var filePathz = Utils.EXTERNAL_STORAGE + "/Download/" + "角度数据zAngleDegreesOld.txt"
+            var filePathy = Utils.EXTERNAL_STORAGE + "/Download/" + "角度数据yAngleDegreesOld" + System.currentTimeMillis() + ".txt"
+            var filePathz = Utils.EXTERNAL_STORAGE + "/Download/" + "角度数据zAngleDegreesOld" + System.currentTimeMillis() + ".txt"
 //            var filePath1 = Utils.EXTERNAL_STORAGE + "/Download/" + "角度数据yAngleDegrees.txt"
 //            var filePath2 = Utils.EXTERNAL_STORAGE + "/Download/" + "角度数据yAngleDegreesFirst.txt"
 //            var bean = DegreeBean(yAngleDegreesOld, yAngleDegrees, yAngleDegreesFirst)
@@ -57,13 +57,13 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
 
         }
 
-        registerSensor()
+//        registerSensor()
 //        permissionCheck()
-//        geLocalData()
+        geLocalData()
     }
 
     private fun geLocalData() {
-        val str = Utils.getTextList(this, "acc.txt")
+        val str = Utils.getTextList(this, "acc4.txt")
         str.forEach {
             var accArray = FloatArray(3)
             val x: String
