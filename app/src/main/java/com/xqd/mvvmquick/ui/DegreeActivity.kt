@@ -58,30 +58,33 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
         }
 
 //        registerSensor()
-//        permissionCheck()
+        permissionCheck()
         geLocalData()
     }
 
     private fun geLocalData() {
-        val str = Utils.getTextList(this, "acc4.txt")
+        val str = Utils.getTextList(this, "acc5.txt")
         str.forEach {
-            var accArray = FloatArray(3)
-            val x: String
-            val y: String
-            val z: String
-            try {
-                x = it.substring(it.indexOf("x:") + 2, it.indexOf(",y"))
-                y = it.substring(it.indexOf("y:") + 2, it.indexOf(",z"))
-                z = it.substring(it.indexOf("z:") + 2, it.indexOf(",t"))
+            if(it.contains("17:23")){
+                var accArray = FloatArray(3)
+                val x: String
+                val y: String
+                val z: String
+                try {
+                    x = it.substring(it.indexOf("x:") + 2, it.indexOf(",y"))
+                    y = it.substring(it.indexOf("y:") + 2, it.indexOf(",z"))
+                    z = it.substring(it.indexOf("z:") + 2, it.indexOf(",t"))
 
-                accArray[0] = x.toFloat()
-                accArray[1] = y.toFloat()
-                accArray[2] = z.toFloat()
-            } catch (e: Exception) {
+                    accArray[0] = x.toFloat()
+                    accArray[1] = y.toFloat()
+                    accArray[2] = z.toFloat()
+                } catch (e: Exception) {
 
+                }
+
+                saveDegree(accArray)
             }
 
-            saveDegree(accArray)
         }
     }
 
