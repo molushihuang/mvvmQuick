@@ -17,6 +17,9 @@ import com.google.gson.GsonBuilder
 import com.xqd.mvvmquick.R
 import kotlinx.android.synthetic.main.activity_degree.*
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @Author: XieQD
@@ -39,6 +42,16 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_degree)
 
+        val time = System.currentTimeMillis();
+        Log.e("timezone格式化", TimeZone.getDefault().id + " 时间戳：" + time)
+        val sd = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        sd.timeZone = TimeZone.getTimeZone("America/Santiago")
+        Log.e("timezone格式化", sd.format(Date(time)))
+        sd.timeZone = TimeZone.getTimeZone("Europe/Bucharest")
+        Log.e("timezone格式化", sd.format(Date(time)))
+
+
+
         btSave.setOnClickListener {
             var filePathy = Utils.EXTERNAL_STORAGE + "/Download/" + "角度数据yAngleDegreesOld" + System.currentTimeMillis() + ".txt"
             var filePathz = Utils.EXTERNAL_STORAGE + "/Download/" + "角度数据zAngleDegreesOld" + System.currentTimeMillis() + ".txt"
@@ -58,14 +71,14 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
         }
 
 //        registerSensor()
-        permissionCheck()
-        geLocalData()
+//        permissionCheck()
+//        geLocalData()
     }
 
     private fun geLocalData() {
         val str = Utils.getTextList(this, "acc5.txt")
         str.forEach {
-            if(it.contains("17:23")){
+            if (it.contains("17:23")) {
                 var accArray = FloatArray(3)
                 val x: String
                 val y: String
