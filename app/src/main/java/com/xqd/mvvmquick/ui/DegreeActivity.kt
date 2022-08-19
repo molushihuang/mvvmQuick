@@ -70,9 +70,11 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
 
         }
 
-//        registerSensor()
-//        permissionCheck()
+        registerSensor()
+        permissionCheck()
 //        geLocalData()
+
+//        geLocalData2()
     }
 
     private fun geLocalData() {
@@ -100,6 +102,33 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
 
         }
     }
+
+    private fun geLocalData2() {
+        val str = Utils.getTextList(this, "acc6.txt")
+        str.forEach {
+            if (it.contains("setNaviAccelerSensor")) {
+                var accArray = FloatArray(3)
+                val x: String
+                val y: String
+                val z: String
+                try {
+                    x = it.substring(it.indexOf("x:") + 2, it.indexOf(",y"))
+                    y = it.substring(it.indexOf("y:") + 2, it.indexOf(",z"))
+                    z = it.substring(it.indexOf("z:") + 2, it.length)
+                    Log.i("方向传感器原始数据》", "x:" + x+" y:" + y+" z:" + z)
+                    accArray[0] = x.toFloat()
+                    accArray[1] = y.toFloat()
+                    accArray[2] = z.toFloat()
+                } catch (e: Exception) {
+
+                }
+
+                saveDegree(accArray)
+            }
+
+        }
+    }
+
 
     private fun registerSensor() {
         //获取传感器服务
@@ -144,11 +173,12 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
         if (gravity != null) {
             if (Utils.getRotationMatrix(r, gravity)) {
                 SensorManager.getOrientation(r, values)
+                var xAngle = Math.toDegrees(values[0].toDouble())
                 var yAngle = Math.toDegrees(values[1].toDouble())
                 var zAngle = Math.toDegrees(values[2].toDouble())
-                Log.e("方向传感器》", "yAngle:" + yAngle)
-                Log.e("方向传感器》", "zAngle:" + zAngle)
-
+//                Log.e("方向传感器》", "yAngle:" + yAngle)
+//                Log.e("方向传感器》", "zAngle:" + zAngle)
+                Log.i("加速器计算角度》", "xAngle:" + xAngle+" yAngle:" + yAngle+" zAngle:" + zAngle)
 //                degrees.add(yAngle)
                 yAngleDegreesOld.add(yAngle)
                 zAngleDegreesOld.add(zAngle)
