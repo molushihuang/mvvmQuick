@@ -32,6 +32,7 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var mSensorManager: SensorManager
     private var geomagnetic: FloatArray? = null
     private var orentation: FloatArray? = null
+    private var gyoscope: FloatArray? = null
     private var degrees: ArrayList<Double> = ArrayList()
     private var yAngleDegreesOld: ArrayList<Double> = ArrayList()
     private var zAngleDegreesOld: ArrayList<Double> = ArrayList()
@@ -115,7 +116,7 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
                     x = it.substring(it.indexOf("x:") + 2, it.indexOf(",y"))
                     y = it.substring(it.indexOf("y:") + 2, it.indexOf(",z"))
                     z = it.substring(it.indexOf("z:") + 2, it.length)
-                    Log.i("方向传感器原始数据》", "x:" + x+" y:" + y+" z:" + z)
+                    Log.i("方向传感器原始数据》", "x:" + x + " y:" + y + " z:" + z)
                     accArray[0] = x.toFloat()
                     accArray[1] = y.toFloat()
                     accArray[2] = z.toFloat()
@@ -136,11 +137,14 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
         /** 方向传感器需要使用加速度传感器和磁场传感器（这个可以不需要），不然的话获取y、z的数据不能变化，这里必须注册以下传感器
          * android 4.0系统摩托罗拉 defy 测试至少需要加速度传感器才可以正常获取y、z的数据
          * */
-//        mSensorManager.registerListener(
-//            this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME
-//        )
+        mSensorManager.registerListener(
+            this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME
+        )
         mSensorManager.registerListener(
             this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL
+        )
+        mSensorManager.registerListener(
+            this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL
         )
 //        mSensorManager.registerListener(
 //            this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME
@@ -148,18 +152,20 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-//        Log.e("方向传感器》", "event.sensor.getType():" + event.sensor.getType())
         var gravity = FloatArray(3)
         when (event.sensor.getType()) {
             Sensor.TYPE_ACCELEROMETER -> gravity = event.values
             Sensor.TYPE_MAGNETIC_FIELD -> geomagnetic = event.values
             Sensor.TYPE_ORIENTATION -> orentation = event.values
+            Sensor.TYPE_GYROSCOPE -> gyoscope = event.values
         }
-//        if(orentation!=null){
-//            Log.e("方向传感器》", " xAngle:" + orentation!![0])
-//            Log.e("方向传感器》", "yAngle:" + orentation!![1])
-//            Log.e("方向传感器》", " zAngle:" + orentation!![2])
-//        }
+
+        if (gyoscope != null) {
+            Log.i("陀螺仪数据》", "x:" + gyoscope!![0] + " y:" + gyoscope!![1] + " z:" + String.format("%.8f", gyoscope!![2]))
+        }
+        if (orentation != null) {
+            Log.i("方向传感器》", "xAngle:" + orentation!![0] + " yAngle:" + orentation!![1] + " zAngle:" + orentation!![2])
+        }
 
         saveDegree(gravity)
     }
@@ -176,9 +182,7 @@ class DegreeActivity : AppCompatActivity(), SensorEventListener {
                 var xAngle = Math.toDegrees(values[0].toDouble())
                 var yAngle = Math.toDegrees(values[1].toDouble())
                 var zAngle = Math.toDegrees(values[2].toDouble())
-//                Log.e("方向传感器》", "yAngle:" + yAngle)
-//                Log.e("方向传感器》", "zAngle:" + zAngle)
-                Log.i("加速器计算角度》", "xAngle:" + xAngle+" yAngle:" + yAngle+" zAngle:" + zAngle)
+                Log.i("加速器计算角度》", "xAngle:" + xAngle + " yAngle:" + yAngle + " zAngle:" + zAngle)
 //                degrees.add(yAngle)
                 yAngleDegreesOld.add(yAngle)
                 zAngleDegreesOld.add(zAngle)
