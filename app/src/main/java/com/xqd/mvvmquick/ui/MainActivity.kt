@@ -100,14 +100,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 //            .build()
 //        this.imageLoader.enqueue(request)
 
-        addViews()
+//        addViews()
 
         var oneToTen = Array(10, { i -> i + 1 })
         oneToTen.count()
 
         //获取传感器服务
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        registerSensor()
+//        registerSensor()
     }
 
     private fun getTime() {
